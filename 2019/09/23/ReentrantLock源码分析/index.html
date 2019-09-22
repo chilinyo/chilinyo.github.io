@@ -55,28 +55,32 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Chaos World">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="一个基于AQS(AbstractQueuedSynchronizer) 实现的可重入锁。  锁分类 分为公平锁 和非公平锁 ，构造器可以指定具体类型：  123456789private final Sync sync;public ReentrantLock() &amp;#123;    sync = new NonfairSync();&amp;#125;public ReentrantLock(bool">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReentrantLock源码分析">
+<meta property="og:url" content="http://yoursite.com/2019/09/23/ReentrantLock源码分析/index.html">
 <meta property="og:site_name" content="Chaos World">
+<meta property="og:description" content="一个基于AQS(AbstractQueuedSynchronizer) 实现的可重入锁。  锁分类 分为公平锁 和非公平锁 ，构造器可以指定具体类型：  123456789private final Sync sync;public ReentrantLock() &amp;#123;    sync = new NonfairSync();&amp;#125;public ReentrantLock(bool">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-09-22T16:16:23.314Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chaos World">
-  <link rel="canonical" href="http://yoursite.com/">
+<meta name="twitter:title" content="ReentrantLock源码分析">
+<meta name="twitter:description" content="一个基于AQS(AbstractQueuedSynchronizer) 实现的可重入锁。  锁分类 分为公平锁 和非公平锁 ，构造器可以指定具体类型：  123456789private final Sync sync;public ReentrantLock() &amp;#123;    sync = new NonfairSync();&amp;#125;public ReentrantLock(bool">
+  <link rel="canonical" href="http://yoursite.com/2019/09/23/ReentrantLock源码分析/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false,
+    isHome: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>Chaos World</title>
+  <title>ReentrantLock源码分析 | Chaos World</title>
   
 
 
@@ -180,10 +184,11 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content page-home">
+          <div id="content" class="content page-post-detail">
             
-  <section id="posts" class="posts-expand">
-      
+
+  <div id="posts" class="posts-expand">
+    
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
   
@@ -204,9 +209,8 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">
-              
-              <a href="/2019/09/23/ReentrantLock源码分析/" class="post-title-link" itemprop="url">ReentrantLock源码分析</a>
+          <h1 class="post-title" itemprop="name headline">ReentrantLock源码分析
+
             
           </h1>
         
@@ -241,8 +245,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
-            <blockquote>
+        <blockquote>
 <p>一个基于<em>AQS(AbstractQueuedSynchronizer)</em> 实现的可重入锁。</p>
 </blockquote>
 <h4 id="锁分类"><a href="#锁分类" class="headerlink" title="锁分类"></a>锁分类</h4><blockquote>
@@ -306,115 +309,43 @@
 <p>以上，公平锁和非公平的区别在于获取锁的时候，公平锁下的线程会排队获取，而非公平锁下的线程会抢占获取。一般，非公平锁的效率较与公平锁会高。</p>
 </blockquote>
 
-          
-        
-      
     </div>
 
     
     
     
+        
+      
+
       <footer class="post-footer">
-          <div class="post-eof"></div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/14/混沌之治/" rel="next" title="SPLIT">
+                  <i class="fa fa-chevron-left"></i> SPLIT
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
         
       </footer>
+    
   </div>
   
   
   
   </article>
 
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/14/混沌之治/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yang Zhilin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chaos World">
-    </span>
-      <header class="post-header">
-
-        
-          <h1 class="post-title" itemprop="name headline">
-              
-              <a href="/2019/08/14/混沌之治/" class="post-title-link" itemprop="url">SPLIT</a>
-            
-          </h1>
-        
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              
-                
-              
-
-              <time title="Created: 2019-08-14 21:31:27" itemprop="dateCreated datePublished" datetime="2019-08-14T21:31:27+08:00">2019-08-14</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-09-23 00:18:04" itemprop="dateModified" datetime="2019-09-23T00:18:04+08:00">2019-09-23</time>
-              </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-            <pre><code>Today I split this chaos world.</code></pre>
-          
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-          <div class="post-eof"></div>
-        
-      </footer>
   </div>
-  
-  
-  
-  </article>
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -433,8 +364,17 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -457,6 +397,23 @@
 
         </div>
       </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#锁分类"><span class="nav-number">1.</span> <span class="nav-text">锁分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取锁"><span class="nav-number">2.</span> <span class="nav-text">获取锁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-公平锁如何获取锁"><span class="nav-number">2.1.</span> <span class="nav-text">1.  公平锁如何获取锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-非公平锁如何获取锁"><span class="nav-number">2.2.</span> <span class="nav-text">2.  非公平锁如何获取锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-释放锁"><span class="nav-number">2.3.</span> <span class="nav-text">3.  释放锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-区别"><span class="nav-number">2.4.</span> <span class="nav-text">4.  区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
     </div>
   </aside>
@@ -552,5 +509,9 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
 </body>
 </html>
